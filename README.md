@@ -24,6 +24,5 @@ somehthing like http://127.0.0.1:53509/data
 
 # Using Helm
 run first time do 
-helm install api-fetch-service .
-next time do 
-helm upgrade api-fetch-service .
+cd api-fetch-service
+helm upgrade --install api-fetch-service .

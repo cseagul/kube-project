@@ -1,0 +1,40 @@
+name: Deploy Kube-Project
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install Kubernetes
+      uses: azure/setup-kubectl@v4
+
+    - name: Install Helm
+      uses: azure/setup-helm@v4
+
+    - name: Create Kind to Kubernetes
+      uses: helm/kind-action@v1
+
+    - name: Build and Push Docker Image into Kind
+      run: |
+        docker build -t api-fetch-service:latest .
+        kind load docker-image api-fetch-service:latest
+
+    - name: Deploy to Kubernetes using Helm
+      run: helm upgrade --install api-fetch-service ./api-fetch-service
+
+    - name: Wait for Deployment to be ready
+      run: kubectl rollout status deployment/api-fetch-service
+
+    - name: Test the API
+      run: |
+          kubectl port-forward service/api-fetch-service 8000:8000 &
+          sleep 5
+          response=$(curl http://localhost:8000/health)
+          echo "$response" | grep '{"status": "ok"}'
