@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-fetch-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-fetch-service
+  template:
+    metadata:
+      labels:
+        app: api-fetch-service
+    spec:
+      containers:
+        - name: api-fetch-service
+          image: api-fetch-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env:
+            - name: API_URL
+              value: "https://rickandmortyapi.com/api/character?species=human&status=alive&origin=earth"
+            - name: API_TIMEOUT
+              value: "5"
+              
