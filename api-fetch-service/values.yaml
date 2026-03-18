@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: api-fetch-service
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  port: 8000
+
+ingress:
+  enabled: false
+  host: api.local
+  path: /
+
+env:
+  API_URL: "https://rickandmortyapi.com/api/character?species=human&status=alive&origin=earth"
+  API_TIMEOUT: "5"
