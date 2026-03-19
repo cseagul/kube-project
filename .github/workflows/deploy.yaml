@@ -20,11 +20,16 @@ jobs:
 
     - name: Create Kind to Kubernetes
       uses: helm/kind-action@v1
+      with:
+        cluster-name: kind
+
+    - name: Check cluster nodes
+      run: kubectl get nodes
 
     - name: Build and Push Docker Image into Kind
       run: |
         docker build -t api-fetch-service:latest .
-        kind load docker-image api-fetch-service:latest
+        kind load docker-image api-fetch-service:latest --name kind
 
     - name: Deploy to Kubernetes using Helm
       run: helm upgrade --install api-fetch-service ./api-fetch-service
