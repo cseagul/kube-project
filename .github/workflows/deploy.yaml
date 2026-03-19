@@ -42,4 +42,4 @@ jobs:
           kubectl port-forward service/api-fetch-service 8000:8000 &
           sleep 5
           response=$(curl http://localhost:8000/health)
-          echo "$response" | grep '{"status": "ok"}'
+          echo "$response" | grep -q '{"status":"ok"}'
